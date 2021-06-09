@@ -34,13 +34,18 @@ jobs:
           # architecture: # optional, default is x64
       
       - name: Get version
-        id: get_version
+        id: version
         run: |
             pub global activate pubspec_version
             cd packages/highlight
             echo "::set-output name=PUBSPEC_VERSION::$(pubver get)')"
-            echo ${{ steps.get_version.outputs.PUBSPEC_VERSION }}
             
+      - name: Test print   
+        run: |
+          echo "start test"
+          echo ${{ steps.version.outputs.PUBSPEC_VERSION }}
+          echo "v${{ steps.version.outputs.PUBSPEC_VERSION }}"
+          echo "end test"
     
       #- name: Automatic Releases
         # You may pin to the exact commit or the version.
