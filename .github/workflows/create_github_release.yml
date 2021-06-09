@@ -43,7 +43,7 @@ jobs:
       - name: Test print   
         run: |
           echo "start test"
-          echo ${{ steps.version.outputs.PUBSPEC_VERSION }}
+          echo "${{ steps.version.outputs.PUBSPEC_VERSION }}"
           echo "v${{ steps.version.outputs.PUBSPEC_VERSION }}"
           echo "end test"
     
