@@ -39,7 +39,7 @@ const reserved_words = [
   'try',
   'while',
   'with',
-  'yield'
+  'yield',
 ];
 
 const literals = [
