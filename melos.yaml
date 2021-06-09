@@ -1,0 +1,7 @@
+name: highlight
+packages:
+  - packages/**
+scripts:
+  # requires `pub global activate flutter_plugin_tools`
+  format:
+    run: dart pub global run flutter_plugin_tools format
