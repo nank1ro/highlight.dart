@@ -10,8 +10,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  highlight: 
-    path: ../highlight
+  highlight:
+    git:
+      url: git@github.com:nank1ro/highlight.dart
+      ref: v0.7.1
+      path: packages/highlight
 
 dev_dependencies:
   flutter_test:
