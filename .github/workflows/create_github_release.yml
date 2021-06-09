@@ -39,7 +39,7 @@ jobs:
             pub global activate pubspec_version
             cd packages/highlight
             echo "::set-output name=PUBSPEC_VERSION::$(pubver get)')"
-            echo ${{ steps.version.outputs.PUBSPEC_VERSION }}
+            echo ${{ steps.get_version.outputs.PUBSPEC_VERSION }}
             
     
       #- name: Automatic Releases
