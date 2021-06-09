@@ -37,6 +37,9 @@ jobs:
         id: bump_version
         run: |
             pub global activate pubspec_version
+            cd packages/flutter_highlight
+            pubver bump build
+            cd ../highlight
             pubver bump build
             version=$(pubver get)
             
