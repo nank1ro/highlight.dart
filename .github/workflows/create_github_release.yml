@@ -22,7 +22,25 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-
+      
+      - name: Setup Dart SDK
+        # You may pin to the exact commit or the version.
+        # uses: dart-lang/setup-dart@9a04e6d73cca37bd455e0608d7e5092f881fd603
+        uses: dart-lang/setup-dart@v1.0
+        # with:
+          # The channel, or a specific version from a channel to install ('stable', 'beta', 'dev', '2.7.2', '2.12.0-1.4.beta'). Using one of the three channels instead of a version will give you the latest version published to that channel.
+          # sdk: # optional, default is stable
+          # The CPU architecture ('x64', 'ia32', 'arm', or 'arm64').
+          # architecture: # optional, default is x64
+      
+      - name: Bump version
+        id: bump version
+        run: |
+            pub global activate pubspec_version
+            pubver bump build
+            version=$(pubver get)
+            
+    
       - name: Automatic Releases
         # You may pin to the exact commit or the version.
         # uses: marvinpinto/action-automatic-releases@919008cf3f741b179569b7a6fb4d8860689ab7f0
@@ -30,4 +48,5 @@ jobs:
         with:
             # GitHub secret token
             repo_token: ${{ secrets.GITHUB_TOKEN }}
-            automatic_release_tag: "latest"
+            automatic_release_tag: "$version"
+            prerelease: false
