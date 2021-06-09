@@ -33,15 +33,12 @@ jobs:
           # The CPU architecture ('x64', 'ia32', 'arm', or 'arm64').
           # architecture: # optional, default is x64
       
-      - name: Bump version
-        id: bump_version
+      - name: Get version
+        id: get_version
         run: |
             pub global activate pubspec_version
-            cd packages/flutter_highlight
-            pubver bump build
             cd ../highlight
-            pubver bump build
-            version=$(pubver get)
+            echo "::set-output name=PUBSPEC_VERSION::$(pubver get)')"
             
     
       - name: Automatic Releases
@@ -51,5 +48,5 @@ jobs:
         with:
             # GitHub secret token
             repo_token: ${{ secrets.GITHUB_TOKEN }}
-            automatic_release_tag: "v$version"
+            automatic_release_tag: "v${{ steps.version.outputs.PUBSPEC_VERSION }}"
             prerelease: false
