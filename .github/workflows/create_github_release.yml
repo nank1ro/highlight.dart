@@ -34,7 +34,7 @@ jobs:
           # architecture: # optional, default is x64
       
       - name: Bump version
-        id: bump version
+        id: bump_version
         run: |
             pub global activate pubspec_version
             pubver bump build
