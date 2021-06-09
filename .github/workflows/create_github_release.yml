@@ -48,5 +48,5 @@ jobs:
         with:
             # GitHub secret token
             repo_token: ${{ secrets.GITHUB_TOKEN }}
-            automatic_release_tag: "$version"
+            automatic_release_tag: "v$version"
             prerelease: false
