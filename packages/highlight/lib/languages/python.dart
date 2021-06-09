@@ -3,6 +3,54 @@
 import '../src/mode.dart';
 import '../src/common_modes.dart';
 
+// https://docs.python.org/3.9/reference/lexical_analysis.html#numeric-literals
+const digitpart = '[0-9](_?[0-9])*';
+const pointfloat = '(\\b($digitpart))?\\.($digitpart})|\\b($digitpart)\\.';
+
+const reserved_words = [
+  'and',
+  'as',
+  'assert',
+  'async',
+  'await',
+  'break',
+  'class',
+  'continue',
+  'def',
+  'del',
+  'elif',
+  'else',
+  'except',
+  'finally',
+  'for',
+  'from',
+  'global',
+  'if',
+  'import',
+  'in',
+  'is',
+  'lambda',
+  'nonlocal|10',
+  'not',
+  'or',
+  'pass',
+  'raise',
+  'return',
+  'try',
+  'while',
+  'with',
+  'yield'
+];
+
+const literals = [
+  '__debug__',
+  'Ellipsis',
+  'False',
+  'None',
+  'NotImplemented',
+  'True'
+];
+
 final python = Mode(
     refs: {
       '~contains~3~variants~2~contains~3': Mode(
@@ -10,9 +58,8 @@ final python = Mode(
           begin: "\\{",
           end: "\\}",
           keywords: {
-            "keyword":
-                "and elif is global as in if from raise for except finally print import pass return exec else break not with class assert yield try while continue del or def lambda async await nonlocal|10",
-            "built_in": "Ellipsis NotImplemented",
+            "keyword": reserved_words.join(" "),
+            "built_in": literals.join(" "),
             "literal": "False None True"
           },
           illegal: "#",
@@ -26,22 +73,22 @@ final python = Mode(
         BACKSLASH_ESCAPE
       ], variants: [
         Mode(
-            begin: "(u|b)?r?'''",
+            begin: r"/([uU]|[bB]|[rR]|[bB][rR]|[rR][bB])?'''/",
             end: "'''",
             contains: [BACKSLASH_ESCAPE, Mode(ref: '~contains~0')],
             relevance: 10),
         Mode(
-            begin: "(u|b)?r?\"\"\"",
+            begin: r'/([uU]|[bB]|[rR]|[bB][rR]|[rR][bB])?"""/',
             end: "\"\"\"",
             contains: [BACKSLASH_ESCAPE, Mode(ref: '~contains~0')],
             relevance: 10),
-        Mode(begin: "(fr|rf|f)'''", end: "'''", contains: [
+        Mode(begin: r"/([fF][rR]|[rR][fF]|[fF])'''/", end: "'''", contains: [
           BACKSLASH_ESCAPE,
           Mode(ref: '~contains~0'),
           Mode(ref: '~contains~3~variants~2~contains~2'),
           Mode(ref: '~contains~3~variants~2~contains~3')
         ]),
-        Mode(begin: "(fr|rf|f)\"\"\"", end: "\"\"\"", contains: [
+        Mode(begin: r'/([fF][rR]|[rR][fF]|[fF])"""/', end: r'""', contains: [
           BACKSLASH_ESCAPE,
           Mode(ref: '~contains~0'),
           Mode(ref: '~contains~3~variants~2~contains~2'),
@@ -65,19 +112,34 @@ final python = Mode(
         QUOTE_STRING_MODE
       ]),
       '~contains~1': Mode(className: "number", relevance: 0, variants: [
-        Mode(begin: "\\b(0b[01]+)[lLjJ]?"),
-        Mode(begin: "\\b(0o[0-7]+)[lLjJ]?"),
+        // exponentfloat, pointfloat
+        // https://docs.python.org/3.9/reference/lexical_analysis.html#floating-point-literals
+        // optionally imaginary
+        // https://docs.python.org/3.9/reference/lexical_analysis.html#imaginary-literals
+        // Note: no leading \b because floats can start with a decimal point
+        // and we don't want to mishandle e.g. `fn(.5)`,
+        // no trailing \b for pointfloat because it can end with a decimal point
+        // and we don't want to mishandle e.g. `0..hex()`; this should be safe
+        // because both MUST contain a decimal point and so cannot be confused with
+        // the interior part of an identifier
         Mode(
             begin:
-                "(-?)(\\b0[xX][a-fA-F0-9]+|(\\b\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)[lLjJ]?")
+                "(\\b($digitpart)|($pointfloat))[eE][+-]?($digitpart)[jJ]?\\b"),
+        Mode(begin: "($pointfloat)[jJ]?"),
+        Mode(begin: "\\b([1-9](_?[0-9])*|0+(_?0)*)[lLjJ]?\\b"),
+        Mode(begin: "\\b0[bB](_?[01])+[lL]?\\b"),
+        Mode(begin: "\\b0[oO](_?[0-7])+[lL]?\\b"),
+        Mode(begin: '\\b0[xX](_?[0-9a-fA-F])+[lL]?\\b'),
+        // imagnumber (digitpart-based)
+        // https://docs.python.org/3.9/reference/lexical_analysis.html#imaginary-literals
+        Mode(begin: '\\b($digitpart)[jJ]\\b'),
       ]),
       '~contains~0': Mode(className: "meta", begin: "^(>>>|\\.\\.\\.) "),
     },
     aliases: ["py", "gyp", "ipython"],
     keywords: {
-      "keyword":
-          "and elif is global as in if from raise for except finally print import pass return exec else break not with class assert yield try while continue del or def lambda async await nonlocal|10",
-      "built_in": "Ellipsis NotImplemented",
+      "keyword": reserved_words.join(" "),
+      "built_in": literals.join(" "),
       "literal": "False None True"
     },
     illegal: "(<\\/|->|\\?)|=>",
