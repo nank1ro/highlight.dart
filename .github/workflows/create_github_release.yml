@@ -24,9 +24,9 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Automatic Releases
-  # You may pin to the exact commit or the version.
-  # uses: marvinpinto/action-automatic-releases@919008cf3f741b179569b7a6fb4d8860689ab7f0
-      - uses: marvinpinto/action-automatic-releases@v1.2.1
+        # You may pin to the exact commit or the version.
+        # uses: marvinpinto/action-automatic-releases@919008cf3f741b179569b7a6fb4d8860689ab7f0
+        uses: marvinpinto/action-automatic-releases@v1.2.1
         with:
             # GitHub secret token
             repo_token: ${{ secrets.GITHUB_TOKEN }}
