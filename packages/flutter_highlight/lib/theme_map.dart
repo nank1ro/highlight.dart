@@ -31,6 +31,7 @@ import 'themes/atelier-sulphurpool-light.dart';
 import 'themes/atom-one-dark-reasonable.dart';
 import 'themes/atom-one-dark.dart';
 import 'themes/atom-one-light.dart';
+import 'themes/blue-cow.dart';
 import 'themes/brown-paper.dart';
 import 'themes/codepen-embed.dart';
 import 'themes/color-brewer.dart';
@@ -182,4 +183,5 @@ const themeMap = {
   'xcode': xcodeTheme,
   'xt256': xt256Theme,
   'zenburn': zenburnTheme,
+  'blue-cow': blueCowTheme,
 };
